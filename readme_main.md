@@ -7,6 +7,12 @@ Name: Jane Doe
 Age: 13
 Subjects: Defense Against the Dark Arts, Charms, History of Magic
 Date Enrolled: 13th May 2016
+
+//updated
+Name: Jane Doe Jr
+Age: 11
+Subjects: Defense Against the Dark Arts, Charms
+Date Enrolled: 13th May 2016
  
 Name: James Verses
 Age: 14
@@ -27,11 +33,15 @@ Change the student with the name of "Jane Doe" to "Jane Doe Jr" and her age to 1
 Remove Jonathan Goh from the system
 
 
+// handson 3
+
+HANDS ON
+Add Arithmancy to James Verses' subjects
+Remove History of Magic from Jane Doe Jr's subjects.
 
 
 
-
-
+show databases
 
 use fake_school
 
@@ -58,12 +68,21 @@ db.students.insertMany([{
 
 
 
+// insert one 
+db.students.insertOne({
+    'Name': 'Jonathan Goh',
+    'Age': 12,
+   'Subjects': 'Divination, Study of Ancient Runes'
+   'Date_Enrolled': '16th April 2017'
+})
+
+
 
 db.students.insertOne({
-    'name':'Fluffy',
-    'age': 3,
-    'subjects':'divine coding method',
-    'Date_Enrolled':'2009'
+    'Name': 'Jane Doe Jr',
+    'Age': 11,
+    'Subjects': 'Defense Against the Dark Arts, Charms',
+    'Date_Enrolled': '13th May 2016'
 })
 
 
@@ -80,6 +99,11 @@ db.students.deleteOne({
  
 })
 
+// delete jonathan 
+db.students.deleteOne({
+    "_id" : ObjectId("6217329f4fe17b3c734240d2")
+})
+
 //update
 db.students.updateOne({
        "_id" : ObjectId("6217329f4fe17b3c734240d2")
@@ -88,3 +112,250 @@ db.students.updateOne({
         'Age':'67'
     }
 })
+
+
+// for array
+db.perfume.updateOne({
+    "_id" : ObjectId("62a4984b1e43fabae663e858")
+    },{
+       '$push': {
+       "capacity": '200ml'
+    }
+
+})
+
+db.students.updateOne({
+    "_id" : ObjectId("621732884fe17b3c734240d1")
+    
+    },{
+        '$set':{
+            "Subjects": "Transfiguration, Alchemy,Arithmancy"
+        }
+})
+
+
+
+db.perfume.updateOne({
+        '_id':ObjectId("623cbd2db6366ca99675dde3")
+}, {
+    '$set': {
+        'capacity':'150ml'
+    }
+})
+
+## remove array attributes to  perfume 
+db.perfume.updateOne({
+    '_id':ObjectId("623cbd2db6366ca99675dde2"),
+}, {
+    '$pull': {
+        'capacity': '100ml'
+    }
+})
+
+//Remove History of Magic from Jane Doe Jr's subjects.
+db.students.updateOne({
+    "_id" : ObjectId("621732644fe17b3c734240d0")
+    },{ 
+        '$set': {
+            "Subjects":"Defense Against the Dark Arts, Charms"
+
+    }
+})
+
+
+
+
+db.students.updateOne({
+    "_id" : ObjectId("621732644fe17b3c734240d0")
+    },{ 
+        '$set': {
+           'Age': 13,
+           'Subjects': 'Defense Against the Dark Arts, Charms',
+           'Date_Enrolled': '13th May 2016'
+
+    }
+})
+
+
+
+
+// remove a key from document 
+db.animals.update({
+    '_id':ObjectId("5f33acfbbf91d0dd5c1440df")
+}, {
+    '$unset': {
+        'date':""
+    }
+})
+
+// non array
+.remove()
+
+
+
+
+
+
+Use the sample_training database
+
+
+Project the company name and year founded and find by the criteria below:
+
+
+All companies founded in the year 2006,
+All companies founded after the year 2000
+All companies founded between the year 1900 and 2010
+
+
+Project the company name, the valuation amount and the valuation currency of its IPO, and find by the criteria below
+All companies with valuation amount higher than 100 million
+All companies with valuation amount higher than 100 million and with the currency being 'USD'
+
+
+## 1a
+db.companies.find({
+    'founded_year': 2006
+},{
+    'name':1,'founded_year':1
+}).pretty()
+
+## 1b
+
+db.companies.find({
+    'founded_year': {
+        '$gte': 2000
+    }
+},{
+    'name': 1,
+    'founded_year':1
+}).pretty()
+
+
+## 1c
+
+db.companies.find({
+    'founded_year':{
+        '$gte': 1900,
+        '$lte': 2010
+    }
+},{
+    'name':1,
+    'founded_year':1
+}).pretty()
+
+
+## 2a 
+db.companies.find({
+    "ipo.valuation_amount" :{
+        '$gte': 100000000
+    }
+},{
+    'name': 1,
+    'ipo': 1
+}).pretty()
+
+
+## 2b
+
+
+db.companies.find({
+    "ipo.valuation_currency_code" : "USD",
+    "ipo.valuation_amount" :{
+        '$gte': 100000000
+    },
+     
+},{
+    'name': 1,
+    'ipo': 1
+}).pretty()
+
+db.companies.find({
+      "ipo.valuation_currency_code" : "USD",
+}).pretty()
+ <!-- "valuation_currency_code" : "USD" -->
+
+//handson
+
+Use the inspections collection from the sample_training database for the questions below
+Find all businesses which has violations issued
+Find all business which has violations, and are in the city of New York.
+Count how many businesses there in the city of New York
+Count how many businesses there are in the city of Ridgewood and does not have violations (hint: google for "not equal" in Mongo)
+
+ ## 1
+db.inspections.find({
+'result': 'Violation Issued'
+},{
+    'business_name': 1,
+    'result':1
+}).pretty()
+
+## 2
+db.inspections.find({
+'address.city':"NEW YORK",
+'result': 'Violation Issued'
+},{
+    'business_name': 1,
+    'address.city' : 1,
+    'result':1
+}).pretty()
+
+## 3
+
+
+db.inspections.find({
+    'address.city':"NEW YORK"
+},{
+    'business_name': 1,
+    'address.city' : 1
+}).pretty().count()
+
+
+db.inspections.find({
+    'address.city':"NEW YORK"
+},{
+    'business_name': 1,
+    'address.city' : 1
+}).count()
+
+
+## 4
+
+db.inspections.find({
+'address.street':"RIDGEWOOD PL",
+'result': {$ne: 'Violation Issued'}
+},{
+    'business_name': 1,
+    'address.street' : 1,
+    'result':1
+}).pretty()
+
+
+
+// handson
+Use the accounts document from the sample_analytics database and answer the following questions:
+Find all accounts that have the InvestmentStock product
+Find all accounts that have both the Commodity and InvestmentStock product
+Find all accounts that have either Commodity OR CurrencyService product
+Find all accounts that does not have CurrencyService product
+Find all products have a limit of more than 1000, and offer both InvestmentStock and InvestmentFund products
+
+
+
+
+## 1 
+db.accounts.find({
+   products: {
+        $elemMatch: {
+           'InvestmentStock'
+        }
+    }
+
+}).pretty()
+
+
+db.accounts.find({
+   products['InvestmentStock']
+      
+
+}).pretty()
