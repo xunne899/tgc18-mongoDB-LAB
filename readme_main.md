@@ -345,17 +345,163 @@ Find all products have a limit of more than 1000, and offer both InvestmentStock
 
 ## 1 
 db.accounts.find({
-   products: {
-        $elemMatch: {
-           'InvestmentStock'
-        }
-    }
-
+   'products': 'InvestmentStock'
+    },{
+        'account_id':1,
+        'products':1
+      
 }).pretty()
 
+## 2
 
 db.accounts.find({
-   products['InvestmentStock']
+   'products': { '$all':['InvestmentStock','Commodity']}
+    },{
+        'account_id':1,
+        'products':1
       
-
 }).pretty()
+
+## 3
+
+db.accounts.find({
+   'products': { '$in':['CurrencyService','Commodity']}
+    },{
+        'account_id':1,
+        'products':1
+      
+}).pretty()
+
+
+## 4 
+db.accounts.find({
+   'products': { '$ne':'CurrencyService'}
+    },{
+        'account_id':1,
+        'products':1
+      
+}).pretty()
+
+
+## 5
+
+db.accounts.find({
+    'limit':{
+        '$gt':1000
+    },
+   'products': { '$all':['InvestmentStock','Commodity']}
+    },{
+        'account_id':1,
+        'limit':1,
+        'products':1
+      
+}).pretty()
+
+
+db.listingsAndReviews.find({ 'amenities':{ '$all':['Oven', 'Microwave', 'Stove', 'Dishes and silverware'] } },{ 'name':1, 'amenities':1 }).pretty()
+
+
+Use the sales collection from the sample_supplies and answer the following questions:
+Show the items sold from the stores at Denver and Seattle.
+Show the items sold from the stores at Denver and where the customer's satisfaction is at least 3.
+Show all onlines sales made at Denver and sales made through phone at Seattle
+Show all sales that does not use a coupon
+Show all envelopes sales where more than 8 envelopes are sold and no coupon are used.
+
+## 1 
+
+db.sales.find({
+   'storeLocation': { '$in':['Denver','Seattle']}
+    },{
+        'items':1,
+        'storeLocation':1,
+        'customer':1
+      
+}).pretty()
+
+
+## 2
+db.sales.find({
+   'customer.satisfaction' : 3,
+   'storeLocation': 'Denver'
+    },{
+        'items':1,
+        'storeLocation':1,
+        'customer':1
+      
+}).pretty()
+
+## 3 
+
+db.sales.find({ 
+    '$or':[ 
+        {'storeLocation':'Denver', 'purchaseMethod':'Online' }, 
+        {'storeLocation':'Seattle', 'purchaseMethod':'Phone'} ] 
+    },{ 
+       'storeLocation':1,
+        'customer':1,
+        'purchaseMethod':1
+
+    }).pretty()
+
+
+
+## 4 
+
+db.sales.find({
+  'couponUsed':false
+
+},{
+    'storeLocation':1,
+        'customer':1,
+        'purchaseMethod':1,
+        'couponUsed':1
+}).pretty()
+
+## 5
+
+<!-- db.sales.find({
+   'couponUsed':false,
+  'items.name':'envelopes',
+  'items.quantity':{
+      '$gt':8
+  }
+  
+},{
+        'storeLocation':1,
+        'customer':1,
+        'items.name' :1,
+        'items.quantity':1,
+        'couponUsed':1
+}).pretty()
+
+
+db.sales.find({
+   'items.name': { '$in':['envelopes']},
+    'couponUsed':false,
+    },{
+        'items':1,
+        'storeLocation':1,
+        'customer':1
+      
+}).pretty() -->
+
+
+```
+db.sales.find({
+    'couponUsed':false,
+    'items':{
+        '$elemMatch':{
+            'name':'envelopes',
+            'quantity':{
+      '$gt':8
+      }
+     }
+    }
+   },{
+      'storeLocation':1,
+        'customer':1,
+        'couponUsed':1,
+        'items.$':1   
+}).pretty()
+
