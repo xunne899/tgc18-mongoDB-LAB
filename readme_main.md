@@ -783,3 +783,52 @@ db.products.updateMany({
 })
 
 db.products.deleteMany({'price':1000})
+
+
+
+//
+HANDS ON FOR CRUD
+
+
+Add in the following pets:
+
+Name: Jorden,
+Age: 15
+Breed: Golden Retriever
+Species: dog
+
+
+Name: Dash
+Age: 3
+Breed: Hamster
+Species: Hamster
+
+
+Name: Carrot
+Age: 1.5
+Breed: Australian Dwarf
+Species: Rabbit
+
+
+
+db.pets.insertMany([
+{  
+    'Name':'Jorden',
+    'Age': 3,
+    'Breed':'Golden Retriever',
+    'Species':'Dog'
+
+},{
+    'Name':'Dash',
+    'Age': 3,
+    'Breed':'Hamster',
+    'Species':'Hamster'
+
+},{
+    'Name':'Carrot',
+    'Age': 1.5,
+    'Breed':'Australian Dwarf',
+    'Species':'Rabbit'
+}
+
+])
