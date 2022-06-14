@@ -505,3 +505,165 @@ db.sales.find({
         'items.$':1   
 }).pretty()
 
+
+
+<!-- /// start example -->
+// range greater and less 
+db.listingsAndReviews.find({
+    'bedrooms':{
+        '$gt':3,
+        '$lt':6
+    }
+},{
+    'name':1,
+    'bedrooms':1,
+    'beds':1
+}).pretty().limit(8)
+
+
+
+
+// or condition -- convert to  array 
+// array 
+db.listingsAndReviews.find({
+   'amenities':{
+     '$in':['Oven','Microwave','Stove']
+   }
+},{
+    'name':1,
+    'amenities':1
+}).pretty().limit(10)
+
+
+
+db.listingsAndReviews.find({
+   'amenities':{
+     '$in':['TV','Cable TV']
+   }
+},{
+    'name':1,
+    'amenities':1
+}).pretty().limit(20)
+
+
+
+
+
+
+// AND condition use $ all to indicate all elements stated to be found
+// array 
+db.listingsAndReviews.find({
+   'amenities':{
+     '$all':['Oven','Microwave','Stove']
+   }
+},{
+    'name':1,
+    'amenities':1
+}).pretty().limit(20)
+
+
+
+// 10006546
+
+db.listingsAndReviews.find({
+'_id':ObjectId('10006546')
+}).pretty().limit(20)
+
+
+// nested objects
+// $or
+
+db.listingsAndReviews.find({
+'$or': [{'address.country': 'Brazil', 
+        'bedrooms':{'$gt':3},
+        'beds':2},
+       {'address.country': 'Canada',
+        'bedrooms':{'$lt':3}},
+      ]
+},{
+    'name':1, 'address.country': 1,'bedrooms':1
+}).pretty().limit(20)
+
+
+
+//elemmatch --- nested dunno how deep is it. 
+
+db.listingsAndReviews.find({
+'reviews':{
+    '$elemMatch':{
+        'reviewer_name':'Octavio'
+    }
+  }
+},{
+    'name':1, 'reviews.$':1
+}).pretty().limit(20)
+
+
+//
+db.listingsAndReviews.find({
+'$and':[
+    {'reviews':{'$elemMatch': {'reviewer_name':'Octavio'}}},
+    {'reviews':{'$elemMatch': {'reviewer_name':'Alex'}}}
+]
+},{
+    'name':1, 'reviews.$':1
+}).pretty().limit(20)
+
+//
+db.listingsAndReviews.find({
+'first_review':{
+    '$lte':ISODate('2018-12-31'),
+    '$gte':ISODate('2016-12-31'),
+
+   }
+},{
+    'name':1,
+    'first_review': 1
+}).pretty().limit(20)
+
+//
+db.listingsAndReviews.find({
+'first_review':{
+    '$lte':ISODate('2018-12-31'),
+
+   }
+},{
+    'name':1,
+    'first_review': 1
+}).pretty().limit(20)
+
+
+
+// sort upper and lower case issue 
+//regex regula expression
+
+db.listingsAndReviews.find({
+    'name':{
+        '$regex':'Spacious', '$options':'i'
+       }
+
+    },{'name':1}).pretty()
+
+// count
+db.listingsAndReviews.find({
+    'bedrooms': 8
+}).count()
+
+
+//
+db.listingsAndReviews.find({
+
+    'amenities.5':{
+        '$exists':true
+    }
+},{'name':1,'amenities':1})
+
+
+db.listingsAndReviews.find({
+
+    'amenities.5':{
+        '$exists':true
+    }
+},{'name':1,'amenities':{
+    $slice:[5,1]
+}})
