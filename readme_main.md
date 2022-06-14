@@ -1,45 +1,5 @@
-HANDS ON
-Create a new mongodb database with the name fake_school
-Create a new collection name students
-Add to the students collection the following documents:
 
-Name: Jane Doe
-Age: 13
-Subjects: Defense Against the Dark Arts, Charms, History of Magic
-Date Enrolled: 13th May 2016
-
-//updated
-Name: Jane Doe Jr
-Age: 11
-Subjects: Defense Against the Dark Arts, Charms
-Date Enrolled: 13th May 2016
- 
-Name: James Verses
-Age: 14
-Subjects: Transfiguration, Alchemy
-Date Enrolled: 15th June 2015
- 
-Name: Jonathan Goh
-Age: 12
-Subjects: Divination, Study of Ancient Runes
-Date Enrolled: 16th April 2017
-
-
-// handson 2
-
-HANDS ON
-Change the age of James Verses to 13
-Change the student with the name of "Jane Doe" to "Jane Doe Jr" and her age to 11.
-Remove Jonathan Goh from the system
-
-
-// handson 3
-
-HANDS ON
-Add Arithmancy to James Verses' subjects
-Remove History of Magic from Jane Doe Jr's subjects.
-
-
+// starting 
 
 show databases
 
@@ -53,148 +13,9 @@ db.<name of collection>.find()
 
 db.students.find()
 
-//insert
-db.students.insertMany([{
-    'Name':'Roger',
-    'Age': 33,
-    'Subjects':'fast coding method',
-    'Date_Enrolled':'27th April 2009'
-},{
-    'Name':'David',
-    'Age': 40,
-    'Subjects':'superb coding programme',
-    'Date_Enrolled':'20th June 2003'
-    }])
+db.students.find().limit(1)
 
-
-
-// insert one 
-db.students.insertOne({
-    'Name': 'Jonathan Goh',
-    'Age': 12,
-   'Subjects': 'Divination, Study of Ancient Runes'
-   'Date_Enrolled': '16th April 2017'
-})
-
-
-
-db.students.insertOne({
-    'Name': 'Jane Doe Jr',
-    'Age': 11,
-    'Subjects': 'Defense Against the Dark Arts, Charms',
-    'Date_Enrolled': '13th May 2016'
-})
-
-
-
-// delete
-Delete object 
-db.students.deleteMany({
-   "_id" : ObjectId("62a54889a7f5a872b74738e9"),
-   "_id" : ObjectId("62a54889a7f5a872b74738ea")
-})
-
-db.students.deleteOne({
-   "_id" : ObjectId("62a54889a7f5a872b74738e9"),
- 
-})
-
-// delete jonathan 
-db.students.deleteOne({
-    "_id" : ObjectId("6217329f4fe17b3c734240d2")
-})
-
-//update
-db.students.updateOne({
-       "_id" : ObjectId("6217329f4fe17b3c734240d2")
-}, {
-    '$set': {
-        'Age':'67'
-    }
-})
-
-
-// for array
-db.perfume.updateOne({
-    "_id" : ObjectId("62a4984b1e43fabae663e858")
-    },{
-       '$push': {
-       "capacity": '200ml'
-    }
-
-})
-
-db.students.updateOne({
-    "_id" : ObjectId("621732884fe17b3c734240d1")
-    
-    },{
-        '$set':{
-            "Subjects": "Transfiguration, Alchemy,Arithmancy"
-        }
-})
-
-
-
-db.perfume.updateOne({
-        '_id':ObjectId("623cbd2db6366ca99675dde3")
-}, {
-    '$set': {
-        'capacity':'150ml'
-    }
-})
-
-## remove array attributes to  perfume 
-db.perfume.updateOne({
-    '_id':ObjectId("623cbd2db6366ca99675dde2"),
-}, {
-    '$pull': {
-        'capacity': '100ml'
-    }
-})
-
-//Remove History of Magic from Jane Doe Jr's subjects.
-db.students.updateOne({
-    "_id" : ObjectId("621732644fe17b3c734240d0")
-    },{ 
-        '$set': {
-            "Subjects":"Defense Against the Dark Arts, Charms"
-
-    }
-})
-
-
-
-
-db.students.updateOne({
-    "_id" : ObjectId("621732644fe17b3c734240d0")
-    },{ 
-        '$set': {
-           'Age': 13,
-           'Subjects': 'Defense Against the Dark Arts, Charms',
-           'Date_Enrolled': '13th May 2016'
-
-    }
-})
-
-
-
-
-// remove a key from document 
-db.animals.update({
-    '_id':ObjectId("5f33acfbbf91d0dd5c1440df")
-}, {
-    '$unset': {
-        'date':""
-    }
-})
-
-// non array
-.remove()
-
-
-
-
-
+//
 
 Use the sample_training database
 
@@ -251,7 +72,8 @@ db.companies.find({
     }
 },{
     'name': 1,
-    'ipo': 1
+    'ipo.valuation_amount': 1,
+    'ipo.valuation_currency_code':1
 }).pretty()
 
 
@@ -266,8 +88,24 @@ db.companies.find({
      
 },{
     'name': 1,
-    'ipo': 1
+    'ipo': 1,
 }).pretty()
+
+
+db.companies.find({
+    "ipo.valuation_currency_code" : "USD",
+    "ipo.valuation_amount" :{
+        '$gte': 100000000
+    },
+     
+},{
+    'name': 1,
+    'ipo.valuation_currency_code': 1,
+    'ipo.valuation_amount' : 1
+}).pretty()
+
+
+
 
 db.companies.find({
       "ipo.valuation_currency_code" : "USD",
@@ -330,6 +168,15 @@ db.inspections.find({
     'result':1
 }).pretty()
 
+
+db.inspections.find({
+'address.city':"RIDGEWOOD",
+'result': {$ne: 'Violation Issued'}
+},{
+    'business_name': 1,
+    'address.city' : 1,
+    'result':1
+}).pretty()
 
 
 // handson
@@ -411,7 +258,7 @@ Show all envelopes sales where more than 8 envelopes are sold and no coupon are 
 ## 1 
 
 db.sales.find({
-   'storeLocation': { '$in':['Denver','Seattle']}
+   'storeLocation': {'$in':['Denver','Seattle']}
     },{
         'items':1,
         'storeLocation':1,
@@ -488,6 +335,7 @@ db.sales.find({
 
 
 ```
+// elemMath for nested objects 
 db.sales.find({
     'couponUsed':false,
     'items':{
@@ -506,6 +354,34 @@ db.sales.find({
 }).pretty()
 
 
+
+//try out 2 for ans
+// elemMath for nested objects 
+
+db.sales.find({
+    'couponUsed':false,
+    'items':{
+        '$elemMatch':{
+            'name':'envelopes',
+            'quantity':{
+      '$gt':8
+      }
+     },'$elemMatch':{
+            'name':'notpad',
+            'quantity':{
+      '$gt':1
+      }
+     }
+    }
+   },{
+      'storeLocation':1,
+        'customer':1,
+        'couponUsed':1,
+        'items.$':1   
+}).pretty()
+
+//$and -- expresions
+//$or -- values
 
 <!-- /// start example -->
 // range greater and less 
@@ -667,3 +543,243 @@ db.listingsAndReviews.find({
 },{'name':1,'amenities':{
     $slice:[5,1]
 }})
+
+db.listingsAndReviews.find({
+    'address.country':{
+        '$not':{
+          $in: ['Brazil','Canada']
+        }
+       }
+     },{
+        'name': 1,'address.country': 1
+     }).pretty()
+
+
+
+
+HANDS ON
+Create a new mongodb database with the name fake_school
+Create a new collection name students
+Add to the students collection the following documents:
+
+Name: Jane Doe
+Age: 13
+Subjects: Defense Against the Dark Arts, Charms, History of Magic
+Date Enrolled: 13th May 2016
+
+//updated
+Name: Jane Doe Jr
+Age: 11
+Subjects: Defense Against the Dark Arts, Charms
+Date Enrolled: 13th May 2016
+ 
+Name: James Verses
+Age: 14
+Subjects: Transfiguration, Alchemy
+Date Enrolled: 15th June 2015
+ 
+Name: Jonathan Goh
+Age: 12
+Subjects: Divination, Study of Ancient Runes
+Date Enrolled: 16th April 2017
+
+
+// handson 2
+
+HANDS ON
+Change the age of James Verses to 13
+Change the student with the name of "Jane Doe" to "Jane Doe Jr" and her age to 11.
+Remove Jonathan Goh from the system
+
+
+// handson 3
+
+HANDS ON
+Add Arithmancy to James Verses' subjects
+Remove History of Magic from Jane Doe Jr's subjects.
+
+
+//insert
+
+// if insertMany need to put it in an array []
+db.students.insertMany([{
+    'Name':'Roger',
+    'Age': 33,
+    'Subjects':'fast coding method',
+    'Date_Enrolled':'27th April 2009'
+},{
+    'Name':'David',
+    'Age': 40,
+    'Subjects':'superb coding programme',
+    'Date_Enrolled':'20th June 2003'
+    }])
+
+
+
+// insert one 
+db.students.insertOne({
+    'Name': 'Jonathan Goh',
+    'Age': 12,
+   'Subjects': 'Divination, Study of Ancient Runes'
+   'Date_Enrolled': '16th April 2017'
+})
+
+
+
+db.students.insertOne({
+    'Name': 'Jane Doe Jr',
+    'Age': 11,
+    'Subjects': 'Defense Against the Dark Arts, Charms',
+    'Date_Enrolled': '13th May 2016'
+})
+
+
+
+// delete
+Delete object 
+db.students.deleteMany({
+   "_id" : ObjectId("62a54889a7f5a872b74738e9"),
+   "_id" : ObjectId("62a54889a7f5a872b74738ea")
+})
+
+db.students.deleteOne({
+   "_id" : ObjectId("62a54889a7f5a872b74738e9"),
+ 
+})
+
+// delete jonathan 
+db.students.deleteOne({
+    "_id" : ObjectId("6217329f4fe17b3c734240d2")
+})
+
+//update
+db.students.updateOne({
+       "_id" : ObjectId("6217329f4fe17b3c734240d2")
+}, {
+    '$set': {
+        'Age':'67'
+    }
+})
+
+
+// for array
+db.perfume.updateOne({
+    "_id" : ObjectId("62a4984b1e43fabae663e858")
+    },{
+       '$push': {
+       "capacity": '200ml'
+    }
+
+})
+
+db.students.updateOne({
+    "_id" : ObjectId("621732884fe17b3c734240d1")
+    
+    },{
+        '$set':{
+            "Subjects": ['Transfiguration', 'Alchemy','Arithmancy']
+        }
+})
+
+
+
+db.students.updateOne({
+    "_id" : ObjectId("62a58868a7061577e2ad3587")
+    
+    },{
+        '$set':{
+            "Subjects": ['Defense Against the Dark Arts', 'Charms']
+        }
+})
+
+
+db.students.updateOne({
+    "_id" : ObjectId("62a58868a7061577e2ad3587")
+    
+    },{
+        '$unset':{
+            "Subjects": ""
+        }
+})
+
+
+db.perfume.updateOne({
+        '_id':ObjectId("623cbd2db6366ca99675dde3")
+}, {
+    '$set': {
+        'capacity':'150ml'
+    }
+})
+
+## remove array attributes to  perfume 
+db.perfume.updateOne({
+    '_id':ObjectId("623cbd2db6366ca99675dde2"),
+}, {
+    '$pull': {
+        'capacity': '100ml'
+    }
+})
+
+//Remove History of Magic from Jane Doe Jr's subjects.
+db.students.updateOne({
+    "_id" : ObjectId("621732644fe17b3c734240d0")
+    },{ 
+        '$set': {
+            "Subjects":['Defense Against the Dark Arts', 'Charms']
+
+    }
+})
+
+
+
+
+db.students.updateOne({
+    "_id" : ObjectId("621732644fe17b3c734240d0")
+    },{ 
+        '$set': {
+           'Age': 13,
+           'Subjects': 'Defense Against the Dark Arts, Charms',
+           'Date_Enrolled': '13th May 2016'
+
+    }
+})
+
+
+
+
+// remove a key from document 
+db.animals.update({
+    '_id':ObjectId("5f33acfbbf91d0dd5c1440df")
+}, {
+    '$unset': {
+        'date':""
+    }
+})
+
+// non array
+.remove()
+
+
+
+Animals handson
+// use animal_shelter
+
+db.animals.insertOne({
+    'name':'Fluffy',
+    'age': 3,
+    'breed':'Golden Retriever',
+    'type':'Dog'
+})
+
+// updateMany
+
+db.products.updateMany({
+    'price':899
+
+},{
+    '$set':{
+        'price': 1000
+    }
+})
+
+db.products.deleteMany({'price':1000})
