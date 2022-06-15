@@ -681,6 +681,16 @@ db.students.updateOne({
         }
 })
 
+// pull or push dont put array in value
+db.students.updateOne({
+    "_id" : ObjectId("621732884fe17b3c734240d1")
+    
+    },{
+        '$pull':{
+            "Subjects": 'Alchemy'
+        }
+})
+
 
 
 db.students.updateOne({
@@ -734,7 +744,7 @@ db.students.updateOne({
 
 
 db.students.updateOne({
-    "_id" : ObjectId("621732644fe17b3c734240d0")
+    "_id" : ObjectId("62a58868a7061577e2ad3587")
     },{ 
         '$set': {
            'Age': 13,
@@ -744,6 +754,14 @@ db.students.updateOne({
     }
 })
 
+
+db.students.updateOne({
+    '_id':ObjectId("62a58868a7061577e2ad3587"),
+}, {
+    '$push': {
+        'Subjects': 'Divine knockout chant'
+    }
+})
 
 
 
